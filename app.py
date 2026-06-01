@@ -16,8 +16,8 @@ st.set_page_config(
 
 @st.cache_resource
 def load_models():
-    stage1_model = torch.load("models/stage1_model.pth", map_location="cpu")
-    stage2_model = torch.load("models/stage2_model.pth", map_location="cpu")
+    stage1_model = torch.load("models/densenet121_chest_xray_5class_best-v2.pth", map_location="cpu")
+    stage2_model = torch.load("models/densenet121_chest_xray_4class_best.pth", map_location="cpu")
 
     stage1_model.eval()
     stage2_model.eval()
