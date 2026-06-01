@@ -18,8 +18,8 @@ st.set_page_config(
 
 DEVICE = torch.device("cpu")
 
-STAGE1_MODEL_PATH = "models/densenet121_chest_xray_5class_best-v2.pth"
-STAGE2_MODEL_PATH = "models/densenet121_chest_xray_4class_best.pth"
+STAGE1_MODEL_PATH = "models/densenet121_chest_xray_4class_best.pth"
+STAGE2_MODEL_PATH = "models/densenet121_final_xray_4class_best.pth"
 
 
 # =========================
