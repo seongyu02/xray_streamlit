@@ -28,7 +28,12 @@ STAGE2_MODEL_PATH = "models/densenet121_chest_xray_4class_best.pth"
 def build_densenet121(num_classes):
     model = models.densenet121(weights=None)
     in_features = model.classifier.in_features
-    model.classifier = nn.Linear(in_features, num_classes)
+
+    model.classifier = nn.Sequential(
+        nn.Dropout(p=0.3),
+        nn.Linear(in_features, num_classes)
+    )
+
     return model
 
 
@@ -106,7 +111,7 @@ def predict_multiclass(model, input_tensor, class_names):
 
 
 # =========================
-# 앱 시작
+# 앱 화면
 # =========================
 st.title("X-ray 2단계 CNN 분류 시스템")
 
@@ -171,8 +176,8 @@ if uploaded_files:
             st.image(image, caption=uploaded_file.name, use_container_width=True)
 
         with col2:
-            # 1단계 예측
             stage1_input = preprocess_image(image, stage1_image_size)
+
             stage1_pred, stage1_conf, stage1_probs = predict_multiclass(
                 stage1_model,
                 stage1_input,
@@ -188,7 +193,6 @@ if uploaded_files:
             )
             st.bar_chart(stage1_prob_df.set_index("Class"))
 
-            # NORMAL이면 2단계 실행 안 함
             if stage1_pred == normal_class_name:
                 final_result = "NORMAL"
                 stage2_pred = "-"
@@ -197,8 +201,8 @@ if uploaded_files:
                 st.success(f"최종 결과: {final_result}")
 
             else:
-                # 2단계 예측
                 stage2_input = preprocess_image(image, stage2_image_size)
+
                 stage2_pred, stage2_conf, stage2_probs = predict_multiclass(
                     stage2_model,
                     stage2_input,
@@ -228,7 +232,6 @@ if uploaded_files:
 
         st.divider()
 
-    # 전체 결과표
     result_df = pd.DataFrame(results)
 
     st.subheader("전체 결과표")
@@ -242,5 +245,6 @@ if uploaded_files:
         file_name="xray_prediction_results.csv",
         mime="text/csv"
     )
+
 else:
     st.info("이미지를 업로드하면 예측이 시작됩니다.")
