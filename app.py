@@ -42,8 +42,17 @@ def build_densenet121(num_classes):
 # =========================
 @st.cache_resource
 def load_models():
-    stage1_ckpt = torch.load(STAGE1_MODEL_PATH, map_location=DEVICE)
-    stage2_ckpt = torch.load(STAGE2_MODEL_PATH, map_location=DEVICE)
+    stage1_ckpt = torch.load(
+        STAGE1_MODEL_PATH,
+        map_location=DEVICE,
+        weights_only=False
+    )
+
+    stage2_ckpt = torch.load(
+        STAGE2_MODEL_PATH,
+        map_location=DEVICE,
+        weights_only=False
+    )
 
     stage1_classes = stage1_ckpt["class_names"]
     stage2_classes = stage2_ckpt["class_names"]
